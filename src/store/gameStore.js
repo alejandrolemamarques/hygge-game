@@ -6,17 +6,57 @@ const useGameStore = create((set, get) => ({
   todasLasPreguntas: [],
   opcionesPreguntas: [], // Las 3 preguntas actuales en la tarjeta
   juegoIniciado: false,
+  categoriaSeleccionada: null, // "Tus experiencias", "Otro", o null para todas
 
   // Inicializar el juego
-  iniciarJuego: () => {
-    const todasLasPreguntas = [...preguntasData.preguntas];
+  iniciarJuego: (categoria = null) => {
+    // Combinar preguntas según la categoría seleccionada
+    let todasLasPreguntas = [];
+    
+    if (categoria === "Tus experiencias") {
+      todasLasPreguntas = [...preguntasData.preguntas["Tus experiencias"]];
+    } else if (categoria === "Otro") {
+      todasLasPreguntas = [...preguntasData.preguntas["Otro"]];
+    } else {
+      // Si no se especifica categoría, usar todas
+      todasLasPreguntas = [
+        ...preguntasData.preguntas["Tus experiencias"],
+        ...preguntasData.preguntas["Otro"]
+      ];
+    }
     
     set({
       todasLasPreguntas: todasLasPreguntas,
       juegoIniciado: true,
+      categoriaSeleccionada: categoria,
     });
     
     // Generar las primeras 3 preguntas
+    get().barajarPreguntas();
+  },
+
+  // Cambiar categoría durante el juego
+  cambiarCategoria: (categoria) => {
+    let todasLasPreguntas = [];
+    
+    if (categoria === "Tus experiencias") {
+      todasLasPreguntas = [...preguntasData.preguntas["Tus experiencias"]];
+    } else if (categoria === "Otro") {
+      todasLasPreguntas = [...preguntasData.preguntas["Otro"]];
+    } else {
+      // null significa todas las categorías
+      todasLasPreguntas = [
+        ...preguntasData.preguntas["Tus experiencias"],
+        ...preguntasData.preguntas["Otro"]
+      ];
+    }
+    
+    set({
+      todasLasPreguntas: todasLasPreguntas,
+      categoriaSeleccionada: categoria,
+    });
+    
+    // Generar nuevas preguntas de la categoría seleccionada
     get().barajarPreguntas();
   },
 
@@ -43,6 +83,7 @@ const useGameStore = create((set, get) => ({
     set({
       opcionesPreguntas: [],
       juegoIniciado: false,
+      categoriaSeleccionada: null,
     });
   },
 }));

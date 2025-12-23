@@ -7,6 +7,8 @@ function Game() {
     opcionesPreguntas,
     barajarPreguntas,
     juegoIniciado,
+    categoriaSeleccionada,
+    cambiarCategoria,
   } = useGameStore();
 
   useEffect(() => {
@@ -27,6 +29,12 @@ function Game() {
     );
   }
 
+  const getCategoriaDisplay = () => {
+    if (categoriaSeleccionada === "Tus experiencias") return "Tus experiencias";
+    if (categoriaSeleccionada === "Otro") return "Otro";
+    return "Todo";
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-amber-50 via-orange-50 to-amber-100 py-8 px-4">
       <div className="max-w-2xl mx-auto">
@@ -38,6 +46,47 @@ function Game() {
           <p className="text-emerald-700 text-lg">
             Conversaciones acogedoras en buena compañía
           </p>
+        </div>
+
+        {/* Selector de categorías */}
+        <div className="mb-6">
+          <div className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-md">
+            <p className="text-sm text-gray-600 mb-3 text-center font-medium">
+              Categoría actual de preguntas: <span className="text-emerald-700 font-bold">{getCategoriaDisplay()}</span>
+            </p>
+            <div className="flex gap-2 justify-center flex-wrap">
+              <button
+                onClick={() => cambiarCategoria(null)}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  categoriaSeleccionada === null
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                Todo
+              </button>
+              <button
+                onClick={() => cambiarCategoria("Tus experiencias")}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  categoriaSeleccionada === "Tus experiencias"
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                Tus experiencias
+              </button>
+              <button
+                onClick={() => cambiarCategoria("Otro")}
+                className={`px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
+                  categoriaSeleccionada === "Otro"
+                    ? 'bg-emerald-600 text-white shadow-md'
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                Otro
+              </button>
+            </div>
+          </div>
         </div>
 
         {/* Tarjeta con 3 preguntas */}
